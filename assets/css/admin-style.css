@@ -1,0 +1,69 @@
+:root {
+    --admin-primary: #1b4332;
+    --admin-accent: #2d6a4f;
+    --admin-fab: #52b788;
+    --admin-bg: #f4f6f8;
+}
+
+body.admin-body {
+    background-color: var(--admin-bg);
+    padding-bottom: 80px; /* Space so bottom nav doesn't cover content */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Header App Bar */
+.admin-app-header {
+    background: var(--admin-primary);
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Bottom App Navigation Bar */
+.admin-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    background: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1050;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+}
+
+.bottom-nav-item {
+    text-align: center;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 11px;
+    flex: 1;
+}
+
+.bottom-nav-item.active {
+    color: var(--admin-accent);
+    font-weight: 700;
+}
+
+.bottom-nav-item i {
+    font-size: 20px;
+    display: block;
+}
+
+/* Floating Action Button (+) */
+.fab-add {
+    background: var(--admin-fab);
+    color: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -25px auto 0 auto;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    font-size: 22px;
+}

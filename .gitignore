@@ -1,0 +1,8 @@
+# Ignore uploaded product images
+uploads/products/*
+!uploads/products/.gitkeep
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
