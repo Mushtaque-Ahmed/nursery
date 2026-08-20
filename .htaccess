@@ -1,0 +1,138 @@
+# =========================================================
+# GREENLEAF NURSERY
+# Apache Configuration
+# =========================================================
+
+RewriteEngine On
+
+# ---------------------------------------------------------
+# BASE DIRECTORY
+# ---------------------------------------------------------
+
+RewriteBase /nursery/
+
+
+# =========================================================
+# 1. REMOVE DIRECTORY INDEX
+# =========================================================
+
+DirectoryIndex index.php
+
+
+# =========================================================
+# 2. PROTECT IMPORTANT DIRECTORIES
+# =========================================================
+
+# Prevent direct access to includes
+
+RewriteRule ^includes/ - [F,L]
+
+
+# Prevent access to configuration files
+
+<FilesMatch "\.(env|ini|log|sql|bak|config)$">
+    Require all denied
+</FilesMatch>
+
+
+# Prevent access to hidden files
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+
+# =========================================================
+# 3. CLEAN CATEGORY URL
+# =========================================================
+#
+# Instead of:
+#
+# /nursery/category.php?category=indoor
+#
+# Use:
+#
+# /nursery/category/indoor
+#
+# =========================================================
+
+RewriteRule ^category/([a-zA-Z0-9_-]+)/?$ category.php?category=$1 [L,QSA]
+
+
+# =========================================================
+# 4. DON'T REWRITE REAL FILES / DIRECTORIES
+# =========================================================
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+
+# =========================================================
+# 5. REMOVE .php FROM URL
+# =========================================================
+#
+# /nursery/category.php
+# becomes:
+# /nursery/category
+#
+# /nursery/about.php
+# becomes:
+# /nursery/about
+#
+# =========================================================
+
+RewriteCond %{THE_REQUEST} \s/+nursery/([^\s?]+)\.php[\s?] [NC]
+RewriteRule ^(.+)\.php$ /nursery/$1 [R=301,L]
+
+
+# =========================================================
+# 6. INTERNALLY LOAD PHP WITHOUT .php
+# =========================================================
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+?)/?$ $1.php [L]
+
+
+# =========================================================
+# 7. UTF-8
+# =========================================================
+
+AddDefaultCharset UTF-8
+
+
+# =========================================================
+# 8. SECURITY HEADERS
+# =========================================================
+
+<IfModule mod_headers.c>
+
+    Header always set X-Content-Type-Options "nosniff"
+
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+</IfModule>
+
+
+# =========================================================
+# 9. CACHE STATIC FILES
+# =========================================================
+
+<IfModule mod_expires.c>
+
+    ExpiresActive On
+
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+
+    ExpiresByType text/css "access plus 7 days"
+
+    ExpiresByType application/javascript "access plus 7 days"
+
+</IfModule>
