@@ -68,9 +68,7 @@
 
                     <div class="hero-circle"></div>
 
-                    <img
-                        src="assets/images/hero-plant.png"
-                        alt="Beautiful green indoor plants"
+                    <img src="assets/images/hero-plant.png" alt="Beautiful green indoor plants"
                         class="img-fluid hero-image">
 
                     <div class="floating-card floating-card-one">
@@ -124,13 +122,13 @@
 
             <div class="col-6 col-lg-3">
 
-                <a href="#" class="category-card"  data-category="indoor">
+                <a href="category/fruit" class="category-card">
 
                     <div class="category-icon green">
                         <i class="bi bi-house-heart"></i>
                     </div>
 
-                    <h3>Indoor Plants</h3>
+                    <h3>Fruits Plants</h3>
 
                     <p>Plants for your home</p>
 
@@ -141,7 +139,7 @@
 
             <div class="col-6 col-lg-3">
 
-                <a href="category/flowering" class="category-card">
+                <a href="category/outdoor" class="category-card">
 
                     <div class="category-icon orange">
                         <i class="bi bi-brightness-high"></i>
@@ -158,7 +156,7 @@
 
             <div class="col-6 col-lg-3">
 
-                <a href="category/indoor" class="category-card"  >
+                <a href="category/flowering" class="category-card">
 
                     <div class="category-icon pink">
                         <i class="bi bi-flower2"></i>
@@ -175,7 +173,7 @@
 
             <div class="col-6 col-lg-3">
 
-                <a href="#" class="category-card"  data-category="Garden">
+                <a href="category/garden" class="category-card" data-category="Garden">
 
                     <div class="category-icon blue">
                         <i class="bi bi-tree"></i>
@@ -231,15 +229,15 @@
         </div>
 
 
-    <div class="row g-4" id="plantsContainer">
+        <div class="row g-4" id="plantsContainer">
 
-    <!-- Products will be loaded from API -->
+            <!-- Products will be loaded from API -->
 
-    <div class="col-12 text-center" id="plantsLoading">
-        <p>Loading plants...</p>
-    </div>
+            <div class="col-12 text-center" id="plantsLoading">
+                <p>Loading plants...</p>
+            </div>
 
-</div>
+        </div>
 
     </div>
 
@@ -255,9 +253,7 @@
 
             <div class="col-lg-6">
 
-                <img
-                    src="assets/images/nursery.jpg"
-                    alt="GreenLeaf Nursery plant collection"
+                <img src="assets/images/nursery.jpg" alt="GreenLeaf Nursery plant collection"
                     class="img-fluid rounded-4 shadow">
 
             </div>
@@ -369,5 +365,8 @@
 
 </section>
 
-
+<script>
+const BASE_URL = <?= json_encode(BASE_URL) ?>;
+</script>
+<script src="<?= BASE_URL ?>assets/js/script.js"></script>
 <?php require_once "includes/footer.php"; ?>

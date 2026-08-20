@@ -1,7 +1,7 @@
 <?php
 
 header("Content-Type: application/json");
-
+require_once __DIR__ . "/../includes/confige.php";
 require_once __DIR__ . "/../admin_angka/api/db.php";
 
 
@@ -24,7 +24,7 @@ $category = trim($_GET["category"] ?? "");
 */
 
 $allowedCategories = [
-    "indoor",
+    "fruit",
     "outdoor",
     "flowering",
     "garden"
@@ -125,8 +125,7 @@ try {
             
               if (!empty($product["image"])) {
 
-            $product["image"] =
-                "admin_angka/" . $product["image"];
+            $product["image"] =BASE_URL . "admin_angka/" . $product["image"];
 
         }
     }

@@ -171,7 +171,7 @@ async function loadCategoryPlants() {
 
         const response =
             await fetch(
-                "api/get_category_products.php?category=" +
+                BASE_URL + "api/get_category_products.php?category=" +
                 encodeURIComponent(category)
             );
 
@@ -302,7 +302,7 @@ async function loadAllPlants(container) {
 
         const response =
             await fetch(
-                "api/get_products.php"
+                BASE_URL + "api/get_products.php"
             );
 
 
@@ -534,10 +534,9 @@ function createCategoryPlantCard(product) {
 
                         <div class="plant-price">
 
-                            ${
-                                hasSale
+                            ${hasSale
 
-                                ? `
+            ? `
 
                                     <strong>
                                         ₹${salePrice}
@@ -549,22 +548,21 @@ function createCategoryPlantCard(product) {
 
                                 `
 
-                                : `
+            : `
 
                                     <strong>
                                         ₹${price}
                                     </strong>
 
                                 `
-                            }
+        }
 
                         </div>
 
 
-                        ${
-                            isAvailable
+                        ${isAvailable
 
-                            ? `
+            ? `
 
                                 <a
                                     href="${whatsappUrl}"
@@ -580,14 +578,14 @@ function createCategoryPlantCard(product) {
 
                             `
 
-                            : `
+            : `
 
                                 <span class="out-of-stock">
                                     Out of Stock
                                 </span>
 
                             `
-                        }
+        }
 
 
                     </div>

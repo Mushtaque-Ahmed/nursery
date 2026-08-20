@@ -1,0 +1,23 @@
+{
+    "name": "GreenLeaf Nursery Admin",
+    "short_name": "GreenLeaf Admin",
+    "description": "GreenLeaf Nursery Administration Panel",
+    "start_url": "./index.php",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "portrait",
+    "background_color": "#f4f8f3",
+    "theme_color": "#2f6f3e",
+    "icons": [
+        {
+            "src": "assets/images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/icon-192.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

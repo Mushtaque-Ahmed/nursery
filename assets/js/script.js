@@ -20,7 +20,7 @@ async function loadPlants() {
     try {
 
         const response =
-            await fetch("api/get_products.php");
+            await fetch(BASE_URL + "api/get_products.php");
 
         if (!response.ok) {
             throw new Error(
@@ -31,7 +31,7 @@ async function loadPlants() {
         const data =
             await response.json();
 
-        console.log("Products API:", data);
+        // console.log("Products API:", data);
 
         if (!data.success) {
             throw new Error(
@@ -42,7 +42,7 @@ async function loadPlants() {
 
         const products =
             data.products || [];
-            allPlants = products;
+        allPlants = products;
 
         if (products.length === 0) {
 
@@ -235,9 +235,8 @@ function createPlantCard(product) {
 
                         <div class="plant-price">
 
-                            ${
-                                hasSale
-                                ? `
+                            ${hasSale
+            ? `
                                     <strong>
                                         ₹${salePrice}
                                     </strong>
@@ -246,19 +245,18 @@ function createPlantCard(product) {
                                         ₹${price}
                                     </del>
                                 `
-                                : `
+            : `
                                     <strong>
                                         ₹${price}
                                     </strong>
                                 `
-                            }
+        }
 
                         </div>
 
 
-                        ${
-                            isAvailable
-                            ? `
+                        ${isAvailable
+            ? `
                                 <a
                                     href="${whatsappUrl}"
                                     class="whatsapp-btn"
@@ -270,12 +268,12 @@ function createPlantCard(product) {
 
                                 </a>
                             `
-                            : `
+            : `
                                 <span class="out-of-stock">
                                     Out of Stock
                                 </span>
                             `
-                        }
+        }
 
                     </div>
 

@@ -159,7 +159,7 @@ function getCategoryName(category) {
 
     const categories = {
 
-        indoor: "Indoor Plants",
+        garden: "Garden Plants",
 
         outdoor: "Outdoor Plants",
 
@@ -407,10 +407,10 @@ function createProductCard(product) {
                     <div class="product-category">
 
                         ${escapeHTML(
-                            getCategoryName(
-                                product.category
-                            )
-                        )}
+        getCategoryName(
+            product.category
+        )
+    )}
 
                     </div>
 
@@ -419,15 +419,14 @@ function createProductCard(product) {
 
                 <div>
 
-                    ${
-                        Number(product.featured) === 1
-                        ? `
+                    ${Number(product.featured) === 1
+            ? `
                             <span class="badge badge-featured">
                                 Featured
                             </span>
                         `
-                        : ""
-                    }
+            : ""
+        }
 
                 </div>
 
@@ -465,19 +464,18 @@ function createProductCard(product) {
 
             <div>
 
-                ${
-                    Number(product.available) === 1
-                    ? `
+                ${Number(product.available) === 1
+            ? `
                         <span class="badge badge-available">
                             Available
                         </span>
                     `
-                    : `
+            : `
                         <span class="badge badge-unavailable">
                             Unavailable
                         </span>
                     `
-                }
+        }
 
             </div>
 
@@ -551,10 +549,10 @@ function createProductRow(product) {
 
             <p>
                 ${escapeHTML(
-                    getCategoryName(
-                        product.category
-                    )
-                )}
+        getCategoryName(
+            product.category
+        )
+    )}
             </p>
 
         </div>
@@ -562,15 +560,14 @@ function createProductRow(product) {
 
         <div class="product-price">
 
-            ${
+            ${product.sale_price
+            ? formatPrice(
                 product.sale_price
-                ? formatPrice(
-                    product.sale_price
-                )
-                : formatPrice(
-                    product.price
-                )
-            }
+            )
+            : formatPrice(
+                product.price
+            )
+        }
 
         </div>
 
@@ -1386,7 +1383,7 @@ function filterProducts() {
 
             card.style.display =
                 matchesSearch &&
-                matchesCategory
+                    matchesCategory
                     ? ""
                     : "none";
 

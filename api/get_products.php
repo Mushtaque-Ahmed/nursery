@@ -2,6 +2,7 @@
 
 header("Content-Type: application/json; charset=UTF-8");
 
+require_once __DIR__ . "/../includes/confige.php";
 require_once __DIR__ . "/../admin_angka/api/db.php";
 
 
@@ -46,7 +47,7 @@ try {
             featured
         FROM plants
         WHERE available = 1
-        ORDER BY featured DESC, id DESC
+        ORDER BY featured DESC, id DESC LIMIT 12
     ";
 
 
@@ -95,8 +96,7 @@ try {
 
         if (!empty($product["image"])) {
 
-            $product["image"] =
-                "admin_angka/" . $product["image"];
+            $product["image"] = BASE_URL . "admin_angka/" . $product["image"];
 
         }
 

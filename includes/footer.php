@@ -1,5 +1,3 @@
-
-
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
 
@@ -21,15 +19,15 @@
 
                 <div class="social-links">
 
-                    <a href="#" aria-label="Facebook">
+                    <a aria-label="Facebook" id="facebookLink">
                         <i class="bi bi-facebook"></i>
                     </a>
 
-                    <a href="#" aria-label="Instagram">
+                    <!-- <a href="#" aria-label="Instagram">
                         <i class="bi bi-instagram"></i>
-                    </a>
+                    </a> -->
 
-                    <a href="#" aria-label="WhatsApp">
+                    <a aria-label="WhatsApp" id="whatsappLink">
                         <i class="bi bi-whatsapp"></i>
                     </a>
 
@@ -48,13 +46,6 @@
                         <a href="#home">Home</a>
                     </li>
 
-                    <li>
-                        <a href="#plants">Plants</a>
-                    </li>
-
-                    <li>
-                        <a href="#categories">Categories</a>
-                    </li>
 
                     <li>
                         <a href="#about">About Us</a>
@@ -68,25 +59,39 @@
             <div class="col-6 col-lg-4">
 
                 <h3>Contact</h3>
-
                 <ul class="contact-list">
 
+                    <!-- Address -->
                     <li>
                         <i class="bi bi-geo-alt"></i>
-                        Your Nursery Address
+
+                        <span id="nurseryAddress">
+                            Loading address...
+                        </span>
                     </li>
 
+
+                    <!-- Phone -->
                     <li>
                         <i class="bi bi-telephone"></i>
-                        +91 99999 99999
+
+                        <a id="nurseryPhone" href="#">
+                            Loading phone...
+                        </a>
                     </li>
 
+
+                    <!-- Opening Hours -->
                     <li>
                         <i class="bi bi-clock"></i>
-                        Mon - Sat: 8:00 AM - 6:00 PM
+
+                        <span>
+                            Mon - Sat: 8:00 AM - 6:00 PM
+                        </span>
                     </li>
 
                 </ul>
+
 
             </div>
 
@@ -108,14 +113,13 @@
 
 
 <!-- Bootstrap JS -->
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
 </script>
 
 <!-- Custom JS -->
-<script src="assets/js/app.js"></script>
-<script src="assets/js/script.js"></script>
-
+<script src="<?=BASE_URL?>assets/js/app.js"></script>
+<script src="<?=BASE_URL?>assets/js/settings.js"></script>
 
 </body>
+
 </html>

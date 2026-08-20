@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/includes/confige.php";
+
 /*
 |--------------------------------------------------------------------------
 | Category SEO Data
@@ -10,41 +12,8 @@ $category = strtolower(
     trim($_GET["category"] ?? "")
 );
 
-
 $categorySEO = [
-
-    "indoor" => [
-        "title" => "Indoor Plants | Beautiful Plants for Your Home",
-        "description" =>
-            "Explore our collection of indoor plants perfect for homes, offices and indoor spaces. Find beautiful, healthy plants from our nursery.",
-        "heading" => "Indoor Plants",
-        "image" => "assets/images/categories/indoor-plants.jpg"
-    ],
-
-    "outdoor" => [
-        "title" => "Outdoor Plants | Plants for Gardens & Outdoor Spaces",
-        "description" =>
-            "Discover outdoor plants perfect for gardens, balconies and outdoor spaces. Browse our collection of healthy nursery plants.",
-        "heading" => "Outdoor Plants",
-        "image" => "assets/images/categories/outdoor-plants.jpg"
-    ],
-
-    "flowering" => [
-        "title" => "Flowering Plants | Beautiful Plants & Flowers",
-        "description" =>
-            "Shop beautiful flowering plants from our nursery. Add colour and natural beauty to your home, balcony or garden.",
-        "heading" => "Flowering Plants",
-        "image" => "assets/images/categories/flowering-plants.jpg"
-    ],
-
-    "fruit" => [
-        "title" => "Fruit Plants | Grow Your Own Fruit",
-        "description" =>
-            "Explore fruit plants from our nursery and grow fresh fruits at home or in your garden.",
-        "heading" => "Fruit Plants",
-        "image" => "assets/images/categories/fruit-plants.jpg"
-    ]
-
+    // your existing categories...
 ];
 
 
@@ -63,21 +32,15 @@ if (isset($categorySEO[$category])) {
     $category = "";
 
     $seo = [
-
-        "title" =>
-            "Plants | Greenleaf Nursery",
+        "title" => "Plants | Greenleaf Nursery",
 
         "description" =>
             "Explore our collection of healthy indoor, outdoor, flowering and fruit plants from Greenleaf Nursery.",
 
-        "heading" =>
-            "Our Plants",
+        "heading" => "Our Plants",
 
-        "image" =>
-            "assets/images/categories/plants.jpg"
-
+        "image" => "assets/images/categories/plants.jpg"
     ];
-
 }
 
 
@@ -85,12 +48,9 @@ if (isset($categorySEO[$category])) {
 |--------------------------------------------------------------------------
 | Website URL
 |--------------------------------------------------------------------------
-|
-| Change this when your real domain is available.
-|
 */
 
-$siteUrl = $siteUrl ?? "http://localhost/nursery";
+$siteUrl = BASE_URL;
 
 
 /*
@@ -99,14 +59,9 @@ $siteUrl = $siteUrl ?? "http://localhost/nursery";
 |--------------------------------------------------------------------------
 */
 
-$categoryUrl =
-    $siteUrl .
-    "/category.php" .
-    (
-        $category
-            ? "?category=" . urlencode($category)
-            : ""
-    );
+$categoryUrl = $category
+    ? $siteUrl . "category/" . urlencode($category)
+    : $siteUrl . "category/";
 
 
 /*
@@ -116,12 +71,12 @@ $categoryUrl =
 */
 
 $ogImage =
-    $siteUrl .
+    rtrim($siteUrl, "/") .
     "/" .
-    $seo["image"];
+    ltrim($seo["image"], "/");
 
 
-require_once "includes/header.php";
+require_once __DIR__ . "/includes/header.php";
 
 ?>
 
@@ -130,10 +85,7 @@ require_once "includes/header.php";
      CATEGORY PAGE
 ========================================================= -->
 
-<section
-    class="category-page section-padding"
-    aria-labelledby="categoryTitle"
->
+<section class="category-page section-padding" aria-labelledby="categoryTitle">
 
     <div class="container">
 
@@ -171,32 +123,59 @@ require_once "includes/header.php";
             </p>
 
 
-            <div
-                class="category-divider"
-                aria-hidden="true"
-            ></div>
+            <div class="category-divider" aria-hidden="true"></div>
 
         </header>
 
 
+        <!-- =========================================================
+     BREADCRUMB
+========================================================= -->
+
+        <nav aria-label="breadcrumb" class="category-breadcrumb">
+
+            <ol class="breadcrumb justify-content-center mb-0">
+
+                <li class="breadcrumb-item">
+                    <a href="<?= BASE_URL ?>">Home</a>
+                </li>
+
+                <li class="breadcrumb-item">
+                    <a href="<?= BASE_URL ?>#categories">Categories</a>
+                </li>
+
+                <?php if (!empty($category)): ?>
+
+                <li class="breadcrumb-item active" aria-current="page">
+                    <?= htmlspecialchars(
+                    $seo["heading"],
+                    ENT_QUOTES,
+                    "UTF-8"
+                ); ?>
+                </li>
+
+                <?php else: ?>
+
+                <li class="breadcrumb-item active" aria-current="page">
+                    Plants
+                </li>
+
+                <?php endif; ?>
+
+            </ol>
+
+        </nav>
         <!-- =================================================
              PRODUCTS
         ================================================= -->
 
-        <div
-            id="categoryPlantsContainer"
-            class="row g-4 category-products"
-            aria-live="polite"
-        >
+        <div id="categoryPlantsContainer" class="row g-4 category-products" aria-live="polite">
 
             <div class="col-12">
 
                 <div class="category-loading">
 
-                    <div
-                        class="loading-icon"
-                        aria-hidden="true"
-                    >
+                    <div class="loading-icon" aria-hidden="true">
                         🌿
                     </div>
 
@@ -215,16 +194,9 @@ require_once "includes/header.php";
              EMPTY STATE
         ================================================= -->
 
-        <div
-            id="categoryEmptyState"
-            class="category-empty"
-            style="display:none;"
-        >
+        <div id="categoryEmptyState" class="category-empty" style="display:none;">
 
-            <div
-                class="empty-icon"
-                aria-hidden="true"
-            >
+            <div class="empty-icon" aria-hidden="true">
                 🌱
             </div>
 
@@ -240,10 +212,7 @@ require_once "includes/header.php";
             </p>
 
 
-            <a
-                href="index.php#categories"
-                class="primary-btn"
-            >
+            <a href="index.php#categories" class="primary-btn">
                 Explore Categories
             </a>
 
@@ -259,7 +228,6 @@ require_once "includes/header.php";
 ========================================================= -->
 
 <script type="application/ld+json">
-
 <?= json_encode(
 
     [
@@ -280,11 +248,14 @@ require_once "includes/header.php";
     JSON_PRETTY_PRINT
 
 ); ?>
-
 </script>
 
 
-<script src="assets/js/category-plants.js"></script>
+<script>
+const BASE_URL = <?= json_encode(BASE_URL) ?>;
+</script>
+
+<script src="<?= BASE_URL ?>assets/js/category-plants.js"></script>
 
 
 <?php require_once "includes/footer.php"; ?>
