@@ -185,16 +185,12 @@ h2 {
 
 .hero-section {
     background:
-        radial-gradient(
-            circle at 90% 20%,
+        radial-gradient(circle at 90% 20%,
             #e5f4df 0,
-            transparent 35%
-        ),
-        linear-gradient(
-            135deg,
+            transparent 35%),
+        linear-gradient(135deg,
             #f8fcf6,
-            #edf7e9
-        );
+            #edf7e9);
 
     padding: 90px 0 100px;
 
@@ -668,11 +664,9 @@ h2 {
     color: var(--white);
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             #2f7d32,
-            #1e6127
-        );
+            #1e6127);
 }
 
 .cta-box::before {
@@ -971,4 +965,31 @@ h2 {
     .floating-card {
         display: none;
     }
+}
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+
+.breadcrumb {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+.breadcrumb-item a {
+    color: #179c1d;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb-item a:hover {
+    color: #1b5e20;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+.breadcrumb-item+.breadcrumb-item::before {
+    color: #999;
 }

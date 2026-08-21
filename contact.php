@@ -1,7 +1,62 @@
-<?php require_once "includes/header.php"; ?>
-
 <?php
+
 require_once "includes/confige.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| Website URL
+|--------------------------------------------------------------------------
+*/
+
+$siteUrl = BASE_URL;
+
+
+/*
+|--------------------------------------------------------------------------
+| Contact Page SEO
+|--------------------------------------------------------------------------
+*/
+
+$seo = [
+
+    "title" =>
+        "Contact Greenleaf Nursery | Plants & Nursery in Assam",
+
+    "description" =>
+        "Contact Greenleaf Nursery for healthy indoor, outdoor, flowering and fruit plants. Find our nursery address, phone number, WhatsApp contact and location.",
+
+    "heading" =>
+        "Contact Greenleaf Nursery",
+
+    "image" =>
+        "assets/images/plants.jpg"
+
+];
+
+
+/*
+|--------------------------------------------------------------------------
+| Canonical URL
+|--------------------------------------------------------------------------
+*/
+
+$categoryUrl =
+    $siteUrl . "contact";
+
+
+/*
+|--------------------------------------------------------------------------
+| Open Graph Image
+|--------------------------------------------------------------------------
+*/
+
+$ogImage =
+    $siteUrl . $seo["image"];
+
+
+require_once "includes/header.php";
+
 ?>
 
 
@@ -11,7 +66,32 @@ require_once "includes/confige.php";
 ========================================================= -->
 
 <main class="contact-page">
+    <section class="page-header py-4">
 
+        <div class="container">
+
+            <nav aria-label="breadcrumb">
+
+                <ol class="breadcrumb">
+
+                    <li class="breadcrumb-item">
+                        <a href="<?= BASE_URL ?>">
+                            <i class="bi bi-house"></i>
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="breadcrumb-item active" aria-current="page">
+                        Contact Us
+                    </li>
+
+                </ol>
+
+            </nav>
+
+        </div>
+
+    </section>
     <div class="container">
 
 

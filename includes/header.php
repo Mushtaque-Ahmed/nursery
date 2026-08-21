@@ -119,6 +119,9 @@ $ogImage = $ogImage ?? (
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/style.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/contact.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/about.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/plants.css">
+
 
 </head>
 
@@ -128,7 +131,7 @@ $ogImage = $ogImage ?? (
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
 
-            <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <a class="navbar-brand d-flex align-items-center" href="<?= BASE_URL ?>">
                 <span class="brand-icon">
                     <i class="bi bi-flower1"></i>
                 </span>
@@ -150,19 +153,16 @@ $ogImage = $ogImage ?? (
                 <ul class="navbar-nav ms-auto align-items-lg-center">
 
                     <li class="nav-item">
-                        <a class="nav-link active" href="#home">Home</a>
+                        <a class="nav-link active" href="<?= BASE_URL ?>">Home</a>
+                    </li>
+
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="plants">Plants</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#categories">Categories</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#plants">Plants</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">About Us</a>
+                        <a class="nav-link" href="about">About Us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact">Contact Us</a>

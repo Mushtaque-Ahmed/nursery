@@ -1,0 +1,403 @@
+/* =====================================================
+   PLANTS PAGE
+===================================================== */
+
+.plants-page {
+    background: #f7faf6;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.plants-header {
+    padding: 65px 0 45px;
+
+    background: #ffffff;
+}
+
+.plants-header h1 {
+    margin: 8px 0 12px;
+
+    color: #203d28;
+
+    font-size: clamp(32px, 5vw, 46px);
+
+    font-weight: 700;
+}
+
+.plants-header p {
+    max-width: 650px;
+
+    margin: auto;
+
+    color: #68736b;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.plants-toolbar {
+    padding: 25px 0;
+
+    background: #ffffff;
+
+    border-top: 1px solid #edf1eb;
+
+    border-bottom: 1px solid #edf1eb;
+}
+
+.plant-search {
+    position: relative;
+}
+
+.plant-search i {
+    position: absolute;
+
+    left: 15px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #6b776d;
+
+    z-index: 2;
+}
+
+.plant-search input {
+    min-height: 48px;
+
+    padding-left: 45px;
+
+    border: 1px solid #dce5da;
+
+    border-radius: 10px;
+}
+
+.plant-search input:focus {
+    border-color: #4c8658;
+
+    box-shadow:
+        0 0 0 3px rgba(76, 134, 88, 0.10);
+}
+
+#plantCategory {
+    min-height: 48px;
+
+    border: 1px solid #dce5da;
+
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+   LIST
+===================================================== */
+
+.plants-list-section {
+    padding: 45px 0 70px;
+}
+
+.plants-result-info {
+    margin-bottom: 25px;
+
+    color: #68736b;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   PRODUCT CARD
+===================================================== */
+
+.plant-card {
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border: 1px solid #e5ece3;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 8px 25px rgba(35, 70, 40, 0.05);
+
+    transition: 0.2s ease;
+}
+
+.plant-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 14px 32px rgba(35, 70, 40, 0.10);
+}
+
+.plant-image-wrapper {
+    position: relative;
+
+    aspect-ratio: 4 / 3;
+
+    overflow: hidden;
+
+    background: #eef4ec;
+}
+
+.plant-image-wrapper img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.3s ease;
+}
+
+.plant-card:hover .plant-image-wrapper img {
+    transform: scale(1.04);
+}
+
+.plant-badge {
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+
+    padding: 5px 10px;
+
+    background: #357344;
+
+    color: #ffffff;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.plant-card-body {
+    padding: 20px;
+}
+
+.plant-category {
+    margin-bottom: 6px;
+
+    color: #4d8757;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+.plant-card-title {
+    margin-bottom: 10px;
+
+    color: #263c2b;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+.plant-description {
+    height: 48px;
+
+    margin-bottom: 15px;
+
+    overflow: hidden;
+
+    color: #748078;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+.plant-price {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+}
+
+.sale-price {
+    color: #2f713e;
+
+    font-size: 19px;
+
+    font-weight: 700;
+}
+
+.old-price {
+    color: #929a94;
+
+    font-size: 14px;
+
+    text-decoration: line-through;
+}
+
+.plant-stock {
+    color: #4b7c54;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.plant-out-stock {
+    color: #c34d4d;
+}
+
+.plant-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.plant-stock-wrapper {
+    flex: 1;
+}
+
+.plant-whatsapp-wrapper {
+    margin-left: auto;
+}
+
+.whatsapp-btn {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    text-decoration: none;
+}
+
+.whatsapp-btn i {
+    font-size: 20px;
+}
+
+.whatsapp-btn span {
+    display: none;
+}
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.plants-empty {
+    padding: 70px 20px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    margin-bottom: 15px;
+
+    font-size: 50px;
+}
+
+.plants-empty h2 {
+    color: #294431;
+}
+
+.plants-empty p {
+    color: #748078;
+}
+
+
+/* =====================================================
+   PAGINATION
+===================================================== */
+
+.plants-pagination {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 45px;
+}
+
+.plants-pagination .pagination {
+    gap: 6px;
+}
+
+.plants-pagination .page-link {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    color: #357344;
+
+    border: 1px solid #dce5da;
+
+    border-radius: 8px !important;
+
+    background: #ffffff;
+}
+
+.plants-pagination .page-item.active .page-link {
+    background: #357344;
+
+    border-color: #357344;
+
+    color: #ffffff;
+}
+
+.plants-pagination .page-item.disabled .page-link {
+    color: #aab2ac;
+
+    background: #f4f6f3;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .plants-header {
+        padding: 45px 0 35px;
+    }
+
+    .plants-list-section {
+        padding: 35px 0 55px;
+    }
+
+    .plant-card-body {
+        padding: 17px;
+    }
+
+    .plant-card-title {
+        font-size: 17px;
+    }
+
+    .plants-pagination .page-link {
+        width: 38px;
+        height: 38px;
+    }
+
+}

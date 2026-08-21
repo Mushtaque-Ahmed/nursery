@@ -29,7 +29,35 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | Get available products
+    | Get Nursery Phone
+    |--------------------------------------------------------------------------
+    */
+
+    $settingsSql = "
+        SELECT phone
+        FROM nursery_settings
+        ORDER BY id ASC
+        LIMIT 1
+    ";
+
+    $settingsStmt =
+        $pdo->prepare($settingsSql);
+
+    $settingsStmt->execute();
+
+    $settings =
+        $settingsStmt->fetch(PDO::FETCH_ASSOC);
+
+
+    $phone =
+        !empty($settings["phone"])
+            ? $settings["phone"]
+            : "";
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Get Available Products
     |--------------------------------------------------------------------------
     */
 
@@ -47,21 +75,26 @@ try {
             featured
         FROM plants
         WHERE available = 1
-        ORDER BY featured DESC, id DESC LIMIT 12
+        ORDER BY featured DESC, id DESC
+        LIMIT 12
     ";
 
 
-    $stmt = $pdo->prepare($sql);
+    $stmt =
+        $pdo->prepare($sql);
 
     $stmt->execute();
 
 
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $products =
+        $stmt->fetchAll(
+            PDO::FETCH_ASSOC
+        );
 
 
     /*
     |--------------------------------------------------------------------------
-    | Convert database values to proper JSON types
+    | Convert Database Values
     |--------------------------------------------------------------------------
     */
 
@@ -70,19 +103,24 @@ try {
         $product["id"] =
             (int) $product["id"];
 
+
         $product["price"] =
             (float) $product["price"];
+
 
         $product["sale_price"] =
             $product["sale_price"] !== null
                 ? (float) $product["sale_price"]
                 : null;
 
+
         $product["stock"] =
             (int) $product["stock"];
 
+
         $product["available"] =
             (bool) $product["available"];
+
 
         $product["featured"] =
             (bool) $product["featured"];
@@ -96,8 +134,10 @@ try {
 
         if (!empty($product["image"])) {
 
-            $product["image"] = BASE_URL . "admin_angka/" . $product["image"];
-
+            $product["image"] =
+                BASE_URL .
+                "admin_angka/" .
+                $product["image"];
         }
 
     }
@@ -107,7 +147,7 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | Success response
+    | Success Response
     |--------------------------------------------------------------------------
     */
 
@@ -118,6 +158,9 @@ try {
         "count" =>
             count($products),
 
+        "phone" =>
+            $phone,
+
         "products" =>
             $products
 
@@ -125,6 +168,12 @@ try {
 
 
 } catch (PDOException $e) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | Error Response
+    |--------------------------------------------------------------------------
+    */
 
     http_response_code(500);
 

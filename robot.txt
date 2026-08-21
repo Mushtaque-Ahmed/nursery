@@ -1,0 +1,21 @@
+User-agent: *
+
+# Allow public website
+Allow: /
+
+# Block admin area
+Disallow: /admin_angka/
+
+# Block API endpoints
+Disallow: /api/
+
+# Block configuration/includes
+Disallow: /includes/
+
+# Block login/private pages
+Disallow: /login.php
+Disallow: /admin-login.php
+Disallow: /dashboard/
+
+# Sitemap
+Sitemap: https://yourdomain.com/nursery/sitemap.xml

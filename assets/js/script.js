@@ -5,7 +5,18 @@
 document.addEventListener("DOMContentLoaded", function () {
     loadPlants();
 });
+
+
 let allPlants = [];
+
+
+/* =========================================
+   NURSERY PHONE
+========================================= */
+
+// ✅ ADDED
+let nurseryPhone = "";
+
 
 async function loadPlants() {
 
@@ -17,32 +28,58 @@ async function loadPlants() {
         return;
     }
 
+
     try {
 
         const response =
             await fetch(BASE_URL + "api/get_products.php");
 
+
         if (!response.ok) {
+
             throw new Error(
                 "Could not connect to product API"
             );
         }
 
+
         const data =
             await response.json();
 
-        // console.log("Products API:", data);
 
         if (!data.success) {
+
             throw new Error(
                 data.message ||
                 "Could not load plants"
             );
         }
 
+
+        /* =========================================
+           NURSERY PHONE
+        ========================================= */
+
+        // ✅ ADDED
+        nurseryPhone =
+            String(data.phone || "")
+                .replace(/\D/g, "");
+
+
+        // Optional console test
+        // console.log("Nursery Phone:", nurseryPhone);
+
+
+        /* =========================================
+           PRODUCTS
+        ========================================= */
+
         const products =
             data.products || [];
+
+
         allPlants = products;
+
 
         if (products.length === 0) {
 
@@ -57,10 +94,12 @@ async function loadPlants() {
             return;
         }
 
+
         container.innerHTML =
             products
                 .map(createPlantCard)
                 .join("");
+
 
     } catch (error) {
 
@@ -68,6 +107,7 @@ async function loadPlants() {
             "Product API error:",
             error
         );
+
 
         container.innerHTML = `
             <div class="col-12 text-center">
@@ -79,18 +119,22 @@ async function loadPlants() {
         `;
     }
 }
-/*===========================================
-category wise products
-===========================================*/
+
+
+/* =========================================
+   CATEGORY WISE PRODUCTS
+========================================= */
 
 function displayPlants(products) {
 
     const container =
         document.getElementById("plantsContainer");
 
+
     if (!container) {
         return;
     }
+
 
     if (products.length === 0) {
 
@@ -105,24 +149,29 @@ function displayPlants(products) {
         return;
     }
 
+
     container.innerHTML =
         products
             .map(createPlantCard)
             .join("");
 }
+
+
 /* =========================================
    CREATE PLANT CARD
 ========================================= */
 
 function createPlantCard(product) {
 
+
     /*
     | Image
     */
 
-    const image = product.image
-        ? product.image
-        : "assets/images/placeholder.jpg";
+    const image =
+        product.image
+            ? product.image
+            : "assets/images/placeholder.jpg";
 
 
     /*
@@ -165,6 +214,7 @@ function createPlantCard(product) {
 
     let badge = "";
 
+
     if (
         product.featured === true ||
         Number(product.featured) === 1
@@ -183,11 +233,27 @@ function createPlantCard(product) {
     */
 
     const message =
-        `Hello, I want to order ${product.name}`;
+        `Hello, I want to order ${product.name} let's discuss about it ?`;
 
-    const whatsappUrl =
-        "https://wa.me/916001349602?text=" +
-        encodeURIComponent(message);
+
+    // ✅ CHANGED
+    // Don't use data.phone here.
+    // Use the global nurseryPhone variable.
+
+    const phone =
+        nurseryPhone;
+
+
+    // ✅ ADDED
+    let whatsappUrl = "#";
+
+
+    if (phone) {
+
+        whatsappUrl =
+            `https://wa.me/${phone}?text=` +
+            encodeURIComponent(message);
+    }
 
 
     /*
@@ -208,6 +274,7 @@ function createPlantCard(product) {
                 <div class="plant-image">
 
                     ${badge}
+
 
                     <img
                         src="${image}"
@@ -237,42 +304,50 @@ function createPlantCard(product) {
 
                             ${hasSale
             ? `
-                                    <strong>
-                                        ₹${salePrice}
-                                    </strong>
+                                        <strong>
+                                            ₹${salePrice}
+                                        </strong>
 
-                                    <del>
-                                        ₹${price}
-                                    </del>
-                                `
+                                        <del>
+                                            ₹${price}
+                                        </del>
+                                    `
             : `
-                                    <strong>
-                                        ₹${price}
-                                    </strong>
-                                `
+                                        <strong>
+                                            ₹${price}
+                                        </strong>
+                                    `
         }
 
                         </div>
 
 
-                        ${isAvailable
+                        ${isAvailable && phone
             ? `
-                                <a
-                                    href="${whatsappUrl}"
-                                    class="whatsapp-btn"
-                                    target="_blank"
-                                    rel="noopener"
-                                    aria-label="Order ${escapeHTML(product.name)} on WhatsApp">
+                                    <a
+                                        href="${whatsappUrl}"
+                                        class="whatsapp-btn"
+                                        target="_blank"
+                                        rel="noopener"
+                                        aria-label="Order ${escapeHTML(product.name)} on WhatsApp">
 
-                                    <i class="bi bi-whatsapp"></i>
+                                        <i class="bi bi-whatsapp"></i>
 
-                                </a>
-                            `
-            : `
-                                <span class="out-of-stock">
-                                    Out of Stock
-                                </span>
-                            `
+                                    </a>
+                                `
+            : isAvailable
+                ? `
+                                        <span
+                                            class="out-of-stock">
+                                            Contact Nursery
+                                        </span>
+                                    `
+                : `
+                                        <span
+                                            class="out-of-stock">
+                                            Out of Stock
+                                        </span>
+                                    `
         }
 
                     </div>
@@ -299,5 +374,4 @@ function escapeHTML(value) {
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-
 }

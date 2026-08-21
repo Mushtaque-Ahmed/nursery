@@ -29,7 +29,7 @@
 
                 <div class="hero-buttons">
 
-                    <a href="#plants" class="btn btn-primary-custom btn-lg">
+                    <a href="<?=BASE_URL?>plants" class="btn btn-primary-custom btn-lg">
                         Explore Plants
                         <i class="bi bi-arrow-right ms-2"></i>
                     </a>
@@ -68,7 +68,7 @@
 
                     <div class="hero-circle"></div>
 
-                    <img src="assets/images/hero-plant.png" alt="Beautiful green indoor plants"
+                    <img src="assets/images/hero-plant.webp" alt="Beautiful green indoor plants"
                         class="img-fluid hero-image">
 
                     <div class="floating-card floating-card-one">
@@ -253,8 +253,9 @@
 
             <div class="col-lg-6">
 
-                <img src="assets/images/nursery.jpg" alt="GreenLeaf Nursery plant collection"
-                    class="img-fluid rounded-4 shadow">
+                <img src="<?= BASE_URL ?>assets/images/arecanut-plant.webp"
+                    alt="Healthy arecanut plants at GreenLeaf Nursery" class="img-fluid rounded-4 shadow" width="800"
+                    height="600" loading="lazy">
 
             </div>
 
@@ -354,7 +355,7 @@
                 plant today.
             </p>
 
-            <a href="#plants" class="btn btn-light btn-lg">
+            <a href="<?=BASE_URL?>plants" class="btn btn-light btn-lg">
                 Explore Plants
                 <i class="bi bi-arrow-right ms-2"></i>
             </a>

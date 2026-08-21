@@ -1,0 +1,405 @@
+.about-page {
+    background: #f7faf6;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.about-hero {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.about-label {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    color: #3f7d4b;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.about-hero h1 {
+    margin-bottom: 20px;
+
+    color: #203d28;
+
+    font-size: clamp(34px, 5vw, 54px);
+    font-weight: 700;
+
+    line-height: 1.15;
+}
+
+.about-hero p {
+    color: #667168;
+
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+.about-hero-text {
+    font-size: 18px !important;
+}
+
+.about-image,
+.collection-image {
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 15px 40px rgba(35, 70, 40, 0.12);
+}
+
+.about-image img,
+.collection-image img {
+    width: 100%;
+    height: auto;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =====================================================
+   BUTTON
+===================================================== */
+
+.about-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-top: 15px;
+
+    padding: 13px 22px;
+
+    background: #357344;
+
+    color: #ffffff;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.about-btn:hover {
+    background: #285b35;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   STORY
+===================================================== */
+
+.about-story {
+    padding: 80px 0;
+}
+
+.about-content-card {
+    padding: 45px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5ece3;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 10px 35px rgba(35, 70, 40, 0.06);
+}
+
+.about-content-card h2 {
+    margin-bottom: 22px;
+
+    color: #203d28;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.about-content-card p {
+    color: #68736b;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   WHY CHOOSE US
+===================================================== */
+
+.why-choose-us {
+    padding: 80px 0;
+
+    background: #ffffff;
+}
+
+.section-heading {
+    max-width: 650px;
+
+    margin: auto;
+}
+
+.section-heading h2 {
+    margin-bottom: 12px;
+
+    color: #203d28;
+
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.section-heading p {
+    color: #68736b;
+
+    line-height: 1.7;
+}
+
+
+.feature-card {
+    height: 100%;
+
+    padding: 30px 25px;
+
+    background: #f7faf6;
+
+    border: 1px solid #e5ece3;
+
+    border-radius: 16px;
+
+    text-align: center;
+
+    transition: all 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 30px rgba(35, 70, 40, 0.08);
+}
+
+.feature-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eaf5ea;
+
+    color: #357344;
+
+    border-radius: 15px;
+
+    font-size: 25px;
+}
+
+.feature-card h3 {
+    margin-bottom: 12px;
+
+    color: #294431;
+
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.feature-card p {
+    margin: 0;
+
+    color: #68736b;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   COLLECTION
+===================================================== */
+
+.plant-collection {
+    padding: 80px 0;
+}
+
+.plant-collection h2 {
+    margin-bottom: 20px;
+
+    color: #203d28;
+
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.plant-collection p {
+    color: #68736b;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+}
+
+.plant-list {
+    padding: 0;
+
+    margin: 25px 0;
+
+    list-style: none;
+}
+
+.plant-list li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 13px;
+
+    color: #3c5643;
+
+    font-weight: 600;
+}
+
+.plant-list i {
+    color: #3f7d4b;
+}
+
+
+/* =====================================================
+   CTA
+===================================================== */
+
+.about-cta {
+    padding: 80px 0;
+
+    background: #eaf5ea;
+}
+
+.about-cta-content {
+    max-width: 750px;
+
+    margin: auto;
+}
+
+.about-cta h2 {
+    margin-bottom: 15px;
+
+    color: #203d28;
+
+    font-size: 38px;
+    font-weight: 700;
+}
+
+.about-cta p {
+    color: #627064;
+
+    font-size: 16px;
+
+    line-height: 1.7;
+}
+
+.about-cta-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+.about-outline-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 15px;
+
+    padding: 12px 22px;
+
+    color: #357344;
+
+    border: 1px solid #357344;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.about-outline-btn:hover {
+    background: #357344;
+
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .about-hero,
+    .about-story,
+    .why-choose-us,
+    .plant-collection,
+    .about-cta {
+        padding: 55px 0;
+    }
+
+    .about-content-card {
+        padding: 28px 22px;
+    }
+
+    .about-content-card h2 {
+        font-size: 27px;
+    }
+
+    .section-heading h2 {
+        font-size: 28px;
+    }
+
+    .plant-collection h2 {
+        font-size: 29px;
+    }
+
+    .about-cta h2 {
+        font-size: 29px;
+    }
+
+}
