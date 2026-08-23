@@ -4,10 +4,6 @@
 |--------------------------------------------------------------------------
 | ERROR HANDLING
 |--------------------------------------------------------------------------
-|
-| Do not display PHP warnings/notices because they would break JSON.
-|
-|--------------------------------------------------------------------------
 */
 
 ini_set("display_errors", 0);
@@ -25,6 +21,16 @@ header("Content-Type: application/json");
 
 require_once "db.php";
 require_once "image_helper.php";
+
+
+/*
+|--------------------------------------------------------------------------
+| IMAGE CONFIGURATION
+|--------------------------------------------------------------------------
+*/
+
+$maxImageSizeKB = 100;
+$maxOriginalSize = 5 * 1024 * 1024; // 5 MB
 
 
 /*
@@ -76,40 +82,25 @@ if ($id <= 0) {
 |--------------------------------------------------------------------------
 */
 
-$name =
-    trim($_POST["name"] ?? "");
+$name = trim($_POST["name"] ?? "");
 
+$category = trim($_POST["category"] ?? "");
 
-$category =
-    trim($_POST["category"] ?? "");
+$price = $_POST["price"] ?? "";
 
+$salePrice = $_POST["sale_price"] ?? "";
 
-$price =
-    $_POST["price"] ?? "";
+$stock = $_POST["stock"] ?? 0;
 
+$description = trim($_POST["description"] ?? "");
 
-$salePrice =
-    $_POST["sale_price"] ?? "";
+$available = isset($_POST["available"])
+    ? (int) $_POST["available"]
+    : 0;
 
-
-$stock =
-    $_POST["stock"] ?? 0;
-
-
-$description =
-    trim($_POST["description"] ?? "");
-
-
-$available =
-    isset($_POST["available"])
-        ? (int) $_POST["available"]
-        : 0;
-
-
-$featured =
-    isset($_POST["featured"])
-        ? (int) $_POST["featured"]
-        : 0;
+$featured = isset($_POST["featured"])
+    ? (int) $_POST["featured"]
+    : 0;
 
 
 /*
@@ -208,6 +199,10 @@ $imagePath = null;
 
 $newImageFullPath = null;
 
+$hasNewImage = false;
+
+$newImageSize = null;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -251,23 +246,12 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | KEEP OLD IMAGE
+    | KEEP OLD IMAGE BY DEFAULT
     |--------------------------------------------------------------------------
     */
 
     $oldImagePath =
         $existingProduct["image"];
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | DEFAULT IMAGE
-    |--------------------------------------------------------------------------
-    |
-    | If user doesn't upload a new image,
-    | keep the existing image.
-    |
-    */
 
     $imagePath =
         $oldImagePath;
@@ -275,7 +259,7 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | NEW IMAGE UPLOADED?
+    | CHECK IF NEW IMAGE WAS UPLOADED
     |--------------------------------------------------------------------------
     */
 
@@ -284,11 +268,17 @@ try {
         $_FILES["image"]["error"] !== UPLOAD_ERR_NO_FILE;
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | PROCESS NEW IMAGE
+    |--------------------------------------------------------------------------
+    */
+
     if ($hasNewImage) {
 
         /*
         |--------------------------------------------------------------------------
-        | UPLOAD ERROR
+        | CHECK UPLOAD ERROR
         |--------------------------------------------------------------------------
         */
 
@@ -308,18 +298,18 @@ try {
         }
 
 
+        $file = $_FILES["image"];
+
+
         /*
         |--------------------------------------------------------------------------
         | ORIGINAL FILE SIZE
         |--------------------------------------------------------------------------
-        |
-        | Maximum original upload = 5 MB
-        |
         */
 
         if (
-            $_FILES["image"]["size"]
-            > 5 * 1024 * 1024
+            $file["size"]
+            > $maxOriginalSize
         ) {
 
             http_response_code(422);
@@ -327,7 +317,7 @@ try {
             echo json_encode([
                 "success" => false,
                 "message" =>
-                    "Original image must be smaller than 5MB"
+                    "Original image must be smaller than 5 MB"
             ]);
 
             exit;
@@ -336,7 +326,7 @@ try {
 
         /*
         |--------------------------------------------------------------------------
-        | CHECK MIME TYPE
+        | CHECK REAL MIME TYPE
         |--------------------------------------------------------------------------
         */
 
@@ -346,7 +336,7 @@ try {
 
         $mime =
             $finfo->file(
-                $_FILES["image"]["tmp_name"]
+                $file["tmp_name"]
             );
 
 
@@ -396,21 +386,7 @@ try {
 
         /*
         |--------------------------------------------------------------------------
-        | COMPRESS + CONVERT
-        |--------------------------------------------------------------------------
-        |
-        | The helper will:
-        |
-        | JPG / PNG / GIF / WebP
-        |          ↓
-        |      Resize
-        |          ↓
-        |       WebP
-        |          ↓
-        |      Compress
-        |          ↓
-        |       <= 20 KB
-        |
+        | COMPRESS + CONVERT TO WEBP
         |--------------------------------------------------------------------------
         */
 
@@ -419,13 +395,13 @@ try {
             $compressedImage =
                 compressImageToWebP(
 
-                    $_FILES["image"]["tmp_name"],
+                    $file["tmp_name"],
 
-                    $_FILES["image"]["name"],
+                    $file["name"],
 
                     $uploadDirectory,
 
-                    20
+                    $maxImageSizeKB
 
                 );
 
@@ -441,94 +417,120 @@ try {
             }
 
 
+            /*
+            |--------------------------------------------------------------------------
+            | NEW DATABASE IMAGE PATH
+            |--------------------------------------------------------------------------
+            */
+
+            $imagePath =
+                "uploads/plants/" .
+                $compressedImage["filename"];
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | FULL SERVER PATH
+            |--------------------------------------------------------------------------
+            */
+
+            $newImageFullPath =
+                dirname(__DIR__) .
+                "/" .
+                $imagePath;
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | VERIFY IMAGE EXISTS
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                !file_exists(
+                    $newImageFullPath
+                )
+            ) {
+
+                throw new Exception(
+                    "Compressed image was not created"
+                );
+            }
+
+
+            clearstatcache(
+                true,
+                $newImageFullPath
+            );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | GET FINAL IMAGE SIZE
+            |--------------------------------------------------------------------------
+            */
+
+            $newImageSize =
+                filesize(
+                    $newImageFullPath
+                );
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | FINAL IMAGE SIZE CHECK
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $newImageSize >
+                ($maxImageSizeKB * 1024)
+            ) {
+
+                if (
+                    file_exists(
+                        $newImageFullPath
+                    )
+                ) {
+
+                    unlink(
+                        $newImageFullPath
+                    );
+                }
+
+
+                throw new Exception(
+                    "Could not compress image below {$maxImageSizeKB} KB"
+                );
+            }
+
+
         } catch (Throwable $e) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | DELETE FAILED NEW IMAGE
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+                $newImageFullPath &&
+                file_exists(
+                    $newImageFullPath
+                )
+            ) {
+
+                @unlink(
+                    $newImageFullPath
+                );
+            }
+
 
             http_response_code(500);
 
             echo json_encode([
                 "success" => false,
                 "message" => $e->getMessage()
-            ]);
-
-            exit;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | NEW IMAGE PATH
-        |--------------------------------------------------------------------------
-        */
-
-        $imagePath =
-            "uploads/plants/" .
-            $compressedImage["filename"];
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | FULL SERVER PATH
-        |--------------------------------------------------------------------------
-        */
-
-        $newImageFullPath =
-            dirname(__DIR__) .
-            "/" .
-            $imagePath;
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | VERIFY NEW IMAGE
-        |--------------------------------------------------------------------------
-        */
-
-        if (
-            !file_exists(
-                $newImageFullPath
-            )
-        ) {
-
-            http_response_code(500);
-
-            echo json_encode([
-                "success" => false,
-                "message" =>
-                    "Compressed image was not created"
-            ]);
-
-            exit;
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | VERIFY <= 20 KB
-        |--------------------------------------------------------------------------
-        */
-
-        $newImageSize =
-            filesize(
-                $newImageFullPath
-            );
-
-
-        if (
-            $newImageSize >
-            (20 * 1024)
-        ) {
-
-            @unlink(
-                $newImageFullPath
-            );
-
-
-            http_response_code(500);
-
-            echo json_encode([
-                "success" => false,
-                "message" =>
-                    "Could not compress image below 20 KB"
             ]);
 
             exit;
@@ -616,10 +618,8 @@ try {
     | DELETE OLD IMAGE
     |--------------------------------------------------------------------------
     |
-    | IMPORTANT:
-    | Only delete the old image AFTER database update succeeds.
+    | Only delete after successful database update.
     |
-    |--------------------------------------------------------------------------
     */
 
     if (
@@ -649,11 +649,11 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | IMAGE SIZE
+    | IMAGE SIZE RESPONSE
     |--------------------------------------------------------------------------
     */
 
-   $imageSize = null;
+    $imageSize = null;
 
     $imageSizeKB = null;
 
@@ -661,8 +661,16 @@ try {
     if (
         $hasNewImage &&
         $newImageFullPath &&
-        file_exists($newImageFullPath)
+        file_exists(
+            $newImageFullPath
+        )
     ) {
+
+        clearstatcache(
+            true,
+            $newImageFullPath
+        );
+
 
         $imageSize =
             filesize(
@@ -680,7 +688,7 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | SUCCESS
+    | SUCCESS RESPONSE
     |--------------------------------------------------------------------------
     */
 
@@ -719,10 +727,8 @@ try {
     | DATABASE ERROR
     |--------------------------------------------------------------------------
     |
-    | If a new compressed image was created but database
-    | update failed, remove the new image.
+    | Delete new image if database update fails.
     |
-    |--------------------------------------------------------------------------
     */
 
     if (

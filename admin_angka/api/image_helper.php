@@ -1,56 +1,32 @@
 <?php
 
-/* =========================================
-   COMPRESS IMAGE TO WEBP
-   TARGET: UNDER 20 KB
-========================================= */
-
 function compressImageToWebP(
     $tmpFile,
     $originalName,
     $uploadDir,
-    $maxSizeKB = 20
+    $maxSizeKB = 100
 ) {
 
-    /* -----------------------------------------
-       Check GD
-    ----------------------------------------- */
-
-    if (!function_exists("imagecreatefromjpeg")) {
-
+    if (!function_exists("imagewebp")) {
         throw new Exception(
-            "PHP GD extension is not enabled."
+            "PHP GD WebP support is not enabled."
         );
-
     }
 
 
-    /* -----------------------------------------
-       Check upload
-    ----------------------------------------- */
-
     if (!file_exists($tmpFile)) {
-
         throw new Exception(
             "Uploaded image not found."
         );
-
     }
 
 
-    /* -----------------------------------------
-       Get image information
-    ----------------------------------------- */
-
     $imageInfo = getimagesize($tmpFile);
 
-
     if (!$imageInfo) {
-
         throw new Exception(
             "Invalid image file."
         );
-
     }
 
 
@@ -59,61 +35,49 @@ function compressImageToWebP(
     $type   = $imageInfo[2];
 
 
-    /* -----------------------------------------
-       Create source image
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Create source image
+    |--------------------------------------------------------------------------
+    */
 
     switch ($type) {
 
         case IMAGETYPE_JPEG:
-
             $source = imagecreatefromjpeg($tmpFile);
-
             break;
-
 
         case IMAGETYPE_PNG:
-
             $source = imagecreatefrompng($tmpFile);
-
             break;
-
 
         case IMAGETYPE_WEBP:
-
             $source = imagecreatefromwebp($tmpFile);
-
             break;
-
 
         case IMAGETYPE_GIF:
-
             $source = imagecreatefromgif($tmpFile);
-
             break;
 
-
         default:
-
             throw new Exception(
                 "Only JPG, PNG, GIF and WebP images are supported."
             );
-
     }
 
 
     if (!$source) {
-
         throw new Exception(
             "Could not read uploaded image."
         );
-
     }
 
 
-    /* -----------------------------------------
-       Maximum dimensions
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Maximum dimensions
+    |--------------------------------------------------------------------------
+    */
 
     $maxWidth  = 1200;
     $maxHeight = 1200;
@@ -126,17 +90,23 @@ function compressImageToWebP(
     );
 
 
-    $newWidth =
-        max(1, (int)($width * $scale));
+    $newWidth = max(
+        1,
+        (int) ($width * $scale)
+    );
 
 
-    $newHeight =
-        max(1, (int)($height * $scale));
+    $newHeight = max(
+        1,
+        (int) ($height * $scale)
+    );
 
 
-    /* -----------------------------------------
-       Create resized image
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Create resized canvas
+    |--------------------------------------------------------------------------
+    */
 
     $canvas = imagecreatetruecolor(
         $newWidth,
@@ -144,11 +114,11 @@ function compressImageToWebP(
     );
 
 
-    /* -----------------------------------------
-       White background
-       Helps PNG transparency become
-       a normal WebP image.
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | White background
+    |--------------------------------------------------------------------------
+    */
 
     $white = imagecolorallocate(
         $canvas,
@@ -157,7 +127,6 @@ function compressImageToWebP(
         255
     );
 
-
     imagefill(
         $canvas,
         0,
@@ -165,10 +134,6 @@ function compressImageToWebP(
         $white
     );
 
-
-    /* -----------------------------------------
-       Resize
-    ----------------------------------------- */
 
     imagecopyresampled(
         $canvas,
@@ -184,9 +149,11 @@ function compressImageToWebP(
     );
 
 
-    /* -----------------------------------------
-       Create upload directory
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Create directory
+    |--------------------------------------------------------------------------
+    */
 
     if (!is_dir($uploadDir)) {
 
@@ -196,22 +163,26 @@ function compressImageToWebP(
             true
         )) {
 
+            imagedestroy($source);
+            imagedestroy($canvas);
+
             throw new Exception(
                 "Could not create upload directory."
             );
-
         }
-
     }
 
 
-    /* -----------------------------------------
-       Generate unique filename
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Generate filename
+    |--------------------------------------------------------------------------
+    */
 
-    $filename =
-        uniqid("plant_", true) .
-        ".webp";
+    $filename = uniqid(
+        "plant_",
+        true
+    ) . ".webp";
 
 
     $outputPath =
@@ -220,161 +191,196 @@ function compressImageToWebP(
         $filename;
 
 
-    /* -----------------------------------------
-       Try different WebP qualities
-       until image reaches target.
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Target size
+    |--------------------------------------------------------------------------
+    */
+
+    $maxBytes =
+        $maxSizeKB * 1024;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Compression settings
+    |--------------------------------------------------------------------------
+    */
 
     $qualities = [
+        85,
         80,
+        75,
         70,
+        65,
         60,
+        55,
         50,
+        45,
         40,
-        30,
-        20,
-        10
+        35,
+        30
     ];
 
 
     $success = false;
 
+    $currentImage = $canvas;
 
-    foreach ($qualities as $quality) {
-
-        imagewebp(
-            $canvas,
-            $outputPath,
-            $quality
-        );
+    $currentWidth = $newWidth;
+    $currentHeight = $newHeight;
 
 
-        if (file_exists($outputPath)) {
+    /*
+    |--------------------------------------------------------------------------
+    | Try compression and resizing
+    |--------------------------------------------------------------------------
+    */
 
-            $size =
-                filesize($outputPath);
+    for ($attempt = 0; $attempt < 6; $attempt++) {
+
+        foreach ($qualities as $quality) {
+
+            imagewebp(
+                $currentImage,
+                $outputPath,
+                $quality
+            );
+
+
+            clearstatcache(
+                true,
+                $outputPath
+            );
 
 
             if (
-                $size <=
-                ($maxSizeKB * 1024)
+                file_exists($outputPath) &&
+                filesize($outputPath) <= $maxBytes
             ) {
 
                 $success = true;
-
-                break;
-
+                break 2;
             }
-
         }
 
-    }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Reduce dimensions by 20%
+        |--------------------------------------------------------------------------
+        */
+
+        $nextWidth =
+            max(
+                300,
+                (int) ($currentWidth * 0.8)
+            );
 
 
-    /* -----------------------------------------
-       If still larger than 20 KB,
-       reduce dimensions.
-    ----------------------------------------- */
-
-    if (!$success) {
-
-        $smallWidth =
-            (int)($newWidth * 0.75);
+        $nextHeight =
+            max(
+                300,
+                (int) ($currentHeight * 0.8)
+            );
 
 
-        $smallHeight =
-            (int)($newHeight * 0.75);
-
-
-        while (
-            filesize($outputPath) >
-            ($maxSizeKB * 1024) &&
-            $smallWidth >= 300
+        if (
+            $nextWidth === $currentWidth ||
+            $nextHeight === $currentHeight
         ) {
-
-            $smallCanvas =
-                imagecreatetruecolor(
-                    $smallWidth,
-                    $smallHeight
-                );
-
-
-            $white = imagecolorallocate(
-                $smallCanvas,
-                255,
-                255,
-                255
-            );
-
-
-            imagefill(
-                $smallCanvas,
-                0,
-                0,
-                $white
-            );
-
-
-            imagecopyresampled(
-                $smallCanvas,
-                $canvas,
-                0,
-                0,
-                0,
-                0,
-                $smallWidth,
-                $smallHeight,
-                $newWidth,
-                $newHeight
-            );
-
-
-            imagewebp(
-                $smallCanvas,
-                $outputPath,
-                30
-            );
-
-
-            imagedestroy(
-                $smallCanvas
-            );
-
-
-            $smallWidth =
-                (int)($smallWidth * 0.75);
-
-
-            $smallHeight =
-                (int)($smallHeight * 0.75);
-
+            break;
         }
 
+
+        $smallCanvas =
+            imagecreatetruecolor(
+                $nextWidth,
+                $nextHeight
+            );
+
+
+        $white = imagecolorallocate(
+            $smallCanvas,
+            255,
+            255,
+            255
+        );
+
+
+        imagefill(
+            $smallCanvas,
+            0,
+            0,
+            $white
+        );
+
+
+        imagecopyresampled(
+            $smallCanvas,
+            $currentImage,
+            0,
+            0,
+            0,
+            0,
+            $nextWidth,
+            $nextHeight,
+            $currentWidth,
+            $currentHeight
+        );
+
+
+        if ($currentImage !== $canvas) {
+            imagedestroy($currentImage);
+        }
+
+
+        $currentImage = $smallCanvas;
+
+        $currentWidth = $nextWidth;
+        $currentHeight = $nextHeight;
     }
 
 
-    /* -----------------------------------------
-       Cleanup
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Cleanup
+    |--------------------------------------------------------------------------
+    */
+
+    if ($currentImage !== $canvas) {
+        imagedestroy($currentImage);
+    }
 
     imagedestroy($source);
-
     imagedestroy($canvas);
 
 
-    /* -----------------------------------------
-       Final check
-    ----------------------------------------- */
+    /*
+    |--------------------------------------------------------------------------
+    | Final validation
+    |--------------------------------------------------------------------------
+    */
 
     if (
+        !$success ||
         !file_exists($outputPath)
     ) {
 
-        throw new Exception(
-            "Could not create WebP image."
-        );
+        if (file_exists($outputPath)) {
+            unlink($outputPath);
+        }
 
+        throw new Exception(
+            "Could not compress image below {$maxSizeKB} KB."
+        );
     }
+
+
+    clearstatcache(
+        true,
+        $outputPath
+    );
 
 
     return [
@@ -382,5 +388,4 @@ function compressImageToWebP(
         "path" => $outputPath,
         "size" => filesize($outputPath)
     ];
-
 }?>

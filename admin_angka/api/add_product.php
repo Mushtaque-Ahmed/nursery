@@ -12,6 +12,16 @@ require_once "image_helper.php";
 
 /*
 |--------------------------------------------------------------------------
+| IMAGE CONFIGURATION
+|--------------------------------------------------------------------------
+*/
+
+$maxImageSizeKB = 100;
+$maxOriginalSize = 5 * 1024 * 1024; // 5 MB
+
+
+/*
+|--------------------------------------------------------------------------
 | REQUEST METHOD
 |--------------------------------------------------------------------------
 */
@@ -111,7 +121,7 @@ if (!is_numeric($stock) || $stock < 0) {
 
 /*
 |--------------------------------------------------------------------------
-| SALE PRICE
+| SALE PRICE VALIDATION
 |--------------------------------------------------------------------------
 */
 
@@ -134,7 +144,7 @@ if ($salePrice === "") {
 
 /*
 |--------------------------------------------------------------------------
-| IMAGE
+| IMAGE VALIDATION
 |--------------------------------------------------------------------------
 */
 
@@ -173,18 +183,16 @@ $file = $_FILES["image"];
 /*
 |--------------------------------------------------------------------------
 | ORIGINAL FILE SIZE
-|
-| Maximum upload before compression = 5 MB
 |--------------------------------------------------------------------------
 */
 
-if ($file["size"] > 5 * 1024 * 1024) {
+if ($file["size"] > $maxOriginalSize) {
 
     http_response_code(422);
 
     echo json_encode([
         "success" => false,
-        "message" => "Original image must be smaller than 5MB"
+        "message" => "Original image must be smaller than 5 MB"
     ]);
 
     exit;
@@ -237,14 +245,12 @@ $uploadDirectory =
 /*
 |--------------------------------------------------------------------------
 | COMPRESS + CONVERT TO WEBP
-|
-| Target:
-| BELOW 20 KB
 |--------------------------------------------------------------------------
 */
 
 $imagePath = null;
 $imageInfo = null;
+$fullImagePath = null;
 
 
 try {
@@ -253,7 +259,7 @@ try {
         $file["tmp_name"],
         $file["name"],
         $uploadDirectory,
-        20
+        $maxImageSizeKB
     );
 
 
@@ -271,7 +277,7 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | Database path
+    | DATABASE IMAGE PATH
     |--------------------------------------------------------------------------
     */
 
@@ -280,67 +286,85 @@ try {
         $imageInfo["filename"];
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | FULL SERVER PATH
+    |--------------------------------------------------------------------------
+    */
+
+    $fullImagePath =
+        dirname(__DIR__) .
+        "/" .
+        $imagePath;
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFY IMAGE EXISTS
+    |--------------------------------------------------------------------------
+    */
+
+    if (!file_exists($fullImagePath)) {
+
+        throw new Exception(
+            "Compressed image was not created."
+        );
+    }
+
+
+    clearstatcache(
+        true,
+        $fullImagePath
+    );
+
+
+    $finalImageSize =
+        filesize($fullImagePath);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | FINAL IMAGE SIZE CHECK
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        $finalImageSize >
+        ($maxImageSizeKB * 1024)
+    ) {
+
+        if (file_exists($fullImagePath)) {
+            unlink($fullImagePath);
+        }
+
+        throw new Exception(
+            "Could not compress image below {$maxImageSizeKB} KB"
+        );
+    }
+
+
 } catch (Throwable $e) {
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE IMAGE IF ERROR OCCURS
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        $fullImagePath &&
+        file_exists($fullImagePath)
+    ) {
+
+        unlink($fullImagePath);
+    }
+
 
     http_response_code(500);
 
     echo json_encode([
         "success" => false,
         "message" => $e->getMessage()
-    ]);
-
-    exit;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| VERIFY COMPRESSED FILE
-|--------------------------------------------------------------------------
-*/
-
-$fullImagePath =
-    dirname(__DIR__) .
-    "/" .
-    $imagePath;
-
-
-if (!file_exists($fullImagePath)) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Compressed image was not created"
-    ]);
-
-    exit;
-}
-
-
-$finalImageSize =
-    filesize($fullImagePath);
-
-
-/*
-|--------------------------------------------------------------------------
-| MAKE SURE IMAGE IS <= 20 KB
-|--------------------------------------------------------------------------
-*/
-
-if ($finalImageSize > 20 * 1024) {
-
-    /*
-    | Delete image if compression failed
-    */
-
-    unlink($fullImagePath);
-
-    http_response_code(500);
-
-    echo json_encode([
-        "success" => false,
-        "message" => "Could not compress image below 20 KB"
     ]);
 
     exit;
@@ -420,7 +444,7 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | PRODUCT ID
+    | GET PRODUCT ID
     |--------------------------------------------------------------------------
     */
 
@@ -430,14 +454,13 @@ try {
 
     /*
     |--------------------------------------------------------------------------
-    | SUCCESS
+    | SUCCESS RESPONSE
     |--------------------------------------------------------------------------
     */
 
     echo json_encode([
 
-        "success" =>
-            true,
+        "success" => true,
 
         "message" =>
             "Plant added successfully",
@@ -464,13 +487,13 @@ try {
     /*
     |--------------------------------------------------------------------------
     | DATABASE FAILED
-    |
-    | Delete image because product was not inserted.
+    | DELETE UPLOADED IMAGE
     |--------------------------------------------------------------------------
     */
 
     if (
         $imagePath &&
+        $fullImagePath &&
         file_exists($fullImagePath)
     ) {
 
@@ -482,8 +505,7 @@ try {
 
     echo json_encode([
 
-        "success" =>
-            false,
+        "success" => false,
 
         "message" =>
             "Could not add product"
