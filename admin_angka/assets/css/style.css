@@ -90,7 +90,7 @@ img {
     z-index: 100;
 }
 
-.mobile-header > div {
+.mobile-header>div {
     display: flex;
     align-items: center;
     gap: 9px;
@@ -147,6 +147,7 @@ img {
 .page.active {
     display: block;
 }
+
 #add-product {
     padding-bottom: 100px;
 }
@@ -752,7 +753,7 @@ img {
     gap: 6px;
 }
 
-.upload-content > span {
+.upload-content>span {
     width: 48px;
     height: 48px;
 
@@ -846,7 +847,7 @@ img {
     border-bottom: none;
 }
 
-.toggle-row > div {
+.toggle-row>div {
     flex: 1;
 }
 
@@ -907,11 +908,11 @@ img {
     transition: 0.2s;
 }
 
-.toggle-row input:checked + .toggle {
+.toggle-row input:checked+.toggle {
     background: var(--primary);
 }
 
-.toggle-row input:checked + .toggle::after {
+.toggle-row input:checked+.toggle::after {
     transform: translateX(20px);
 }
 
@@ -928,7 +929,7 @@ img {
     gap: 10px;
 
     margin-top: 10px;
-     margin-bottom: 80px;
+    margin-bottom: 80px;
 }
 
 
@@ -950,7 +951,7 @@ img {
     box-shadow: var(--shadow);
 }
 
-.empty-state > span {
+.empty-state>span {
     display: block;
 
     font-size: 45px;
@@ -1289,6 +1290,62 @@ img {
         border-radius: 10px;
 
         font-weight: 600;
+    }
+
+    /* =====================================
+   MOBILE SETTINGS LOGOUT BUTTON
+===================================== */
+
+    .logout-mobile-page-btn {
+        width: 100%;
+        padding: 14px 20px;
+
+        background: #dc3545;
+        color: #ffffff;
+
+        border: none;
+        border-radius: 12px;
+
+        font-size: 16px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+
+    /* Prevent link/button default styles */
+
+    .logout-mobile-page-btn:hover {
+        background: #bb2d3b;
+        color: #ffffff;
+    }
+
+
+    .logout-mobile-page-btn:active {
+        transform: scale(0.98);
+    }
+
+
+    /* Hide logout card on desktop */
+
+    .logout-card {
+        display: none;
+    }
+
+
+    /* Show logout card on mobile */
+
+    @media (max-width: 768px) {
+
+        .logout-card {
+            display: block;
+        }
+
     }
 
     /* Main */

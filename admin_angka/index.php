@@ -83,7 +83,7 @@ require_once  "includes/auth.php";
         </nav>
 
         <div class="sidebar-bottom">
-            <button class="logout-btn" id="logoutButton">
+            <button class="logout-btn logoutButton" type="button">
                 🚪 Logout
             </button>
         </div>
@@ -527,8 +527,23 @@ require_once  "includes/auth.php";
                 <button type="button" id="saveNurserySettings" class="primary-btn">
                     Save Settings
                 </button>
+                <!-- Account / Logout -->
+                <div class="form-card logout-card">
+
+                    <h2>Account</h2>
+
+                    <p class="form-description">
+                        Manage your admin account.
+                    </p>
+
+                    <button class="logout-mobile-page-btn logoutButton" type="button">
+                        🚪 Logout
+                    </button>
+
+                </div>
 
             </div>
+
 
         </section>
 

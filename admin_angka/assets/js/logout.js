@@ -1,31 +1,47 @@
 document
-    .getElementById("logoutButton")
-    .addEventListener("click", async () => {
+    .querySelectorAll(".logoutButton")
+    .forEach(button => {
 
-        try {
+        button.addEventListener("click", async () => {
 
-            const response = await fetch(
-                "api/admin_logout.php",
-                {
-                    method: "POST"
+            try {
+
+                const response = await fetch(
+                    "api/admin_logout.php",
+                    {
+                        method: "POST"
+                    }
+                );
+
+                const result = await response.json();
+
+                if (result.success) {
+
+                    window.location.href =
+                        "login.html";
+
+                } else {
+
+                    alert(
+                        result.message ||
+                        "Logout failed. Please try again."
+                    );
+
                 }
-            );
 
-            const result = await response.json();
+            } catch (error) {
 
-            if (result.success) {
+                console.error(
+                    "Logout error:",
+                    error
+                );
 
-                window.location.href =
-                    "login.html";
+                alert(
+                    "Something went wrong while logging out."
+                );
+
             }
 
-        } catch (error) {
-
-            console.error(
-                "Logout error:",
-                error
-            );
-
-        }
+        });
 
     });
